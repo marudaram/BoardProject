@@ -10,22 +10,22 @@ export default defineComponent({
   <div class="wrapBox">
 
     <div class="contentBox">
-      <div>
-        <h2>글 제목</h2>
-        <button>글쓰기</button>
+      <div class="firstBox">
+        <h2 style="float: left">글 제목</h2>
+        <button class="writeBtn">글쓰기</button>
       </div>
 
-      <div>
-        <div>
+      <div class="secondBox">
+        <div class="cell1">
           <span>글 내용</span>
         </div>
-        <div>
+        <div class="cell2">
           글내용
-        </div>
-        <div>
-          <h5>작성자: 홍길동</h5>
-          <h5>등록 시간: 2023-07-07 07:07</h5>
-          <h5>조회수: 77</h5>
+          <div class="cell3">
+            <h5>작성자: 홍길동</h5>
+            <h5>등록 시간: 2023-07-07 07:07</h5>
+            <h5>조회수: 77</h5>
+          </div>
         </div>
       </div>
 
@@ -103,33 +103,78 @@ export default defineComponent({
 
   </div>
 
-
-  <div>
-    <ul>
-      <li>목록</li>
-      <li>수정</li>
-      <li>삭제</li>
-    </ul>
-  </div>
-
-  <!--댓글 불러오기-->
-  <div>
-    <h3>댓글 목록</h3>
-    <div>
-      <div>
-
-      </div>
-    </div>
-
-    <!--댓글 입력폼-->
-    <div>
-
-    </div>
-
-  </div>
 </template>
 
 <style scoped>
+
+.wrapBox {
+  height: 800px;
+  width: 800px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.firstBox {
+  border: 1px solid red;
+  height: 80px;
+  position: relative;
+  margin-top: 80px;
+}
+
+.firstBox .writeBtn {
+  float: right;
+  position: absolute;
+  width: 80px;
+  top: 80%;
+  left: 95%;
+  transform: translate(-50%, -50%);
+}
+
+.secondBox {
+  border: 1px solid brown;
+  height: 500px;
+  display: grid;
+  grid-template-columns: 200px 200px 200px;
+}
+
+.secondBox .contentTitle {
+  border: 1px solid pink;
+  width: 20%;
+  height: 500px;
+}
+
+
+
+.cell1 {
+  box-sizing: border-box;
+  border: 5px solid black;
+  border-radius: 10px;
+  padding: 10px;
+  grid-row-start: 1;
+  grid-row-end: 4;
+  grid-column-start: 1;
+  grid-column-end: 2;
+}
+
+.cell2 {
+  box-sizing: border-box;
+  border: 5px solid black;
+  border-radius: 10px;
+  width: 600px;
+  padding: 10px;
+  grid-row-start: 1;
+  grid-row-end: 4;
+
+}
+
+.cell3 {
+  box-sizing: border-box;
+  border: 5px solid black;
+  border-radius: 10px;
+  padding: 10px;
+
+}
+
 .reply-wrap {
   background-color: #f5f5f5;
   padding: 15px;
