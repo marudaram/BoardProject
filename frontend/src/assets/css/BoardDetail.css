@@ -1,0 +1,192 @@
+.wrapBox {
+    height: 800px;
+    width: 800px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.firstBox {
+    border: 1px solid red;
+    height: 80px;
+    position: relative;
+    margin-top: 80px;
+}
+
+.firstBox .writeBtn {
+    float: right;
+    position: absolute;
+    width: 80px;
+    top: 80%;
+    left: 95%;
+    transform: translate(-50%, -50%);
+}
+
+.secondBox {
+    border: 1px solid purple;
+    height: 500px;
+    display: grid;
+    grid-template-columns: 200px 200px 200px;
+}
+
+.secondBox .contentTitle {
+    border: 1px solid pink;
+    width: 20%;
+    height: 500px;
+}
+
+
+
+.cell1 {
+    box-sizing: border-box;
+    border-radius: 10px;
+    padding: 10px;
+    grid-row-start: 1;
+    grid-row-end: 4;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    position: relative;
+    border-right: 1px solid lightgrey;
+}
+
+.cell1 .titleMini {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+
+}
+
+.cell2 {
+    box-sizing: border-box;
+    border-radius: 10px;
+    width: 600px;
+    padding: 10px;
+    grid-row-start: 1;
+    grid-row-end: 4;
+    position: relative;
+}
+
+.cell3 {
+    box-sizing: border-box;
+    border-radius: 10px;
+    padding: 10px;
+    float: right;
+}
+
+.cell4 {
+    border: 1px solid pink;
+    width: 530px;
+    position: absolute;
+    top: 30%;
+    left: 5%;
+}
+
+.thirdBox {
+    border: 1px solid darkred;
+    height: 200px;
+    position: relative;
+}
+
+.thirdBox .fileTitle {
+    position: absolute;
+    border-right: 1px solid lightgrey;
+    top: 50%;
+    left: 3%;
+}
+
+.cell5 {
+    border-right: 1px solid lightgrey;
+}
+
+.cell6 {
+    position: absolute;
+    top: 30%;
+    left: 30%;
+}
+
+.btnBox {
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+}
+
+.backToListBtn {
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+}
+
+.reply-wrap {
+    background-color: #f5f5f5;
+    padding: 15px;
+    border: 1px solid #ddd;
+    position: relative;
+}
+
+.reply-wrap .reply-image {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+
+}
+
+.reply-wrap .reply-content {
+    margin-left: 60px;
+}
+
+.reply-content .form-control {
+    border-radius: 0;
+    margin: 0 0 10px;
+
+}
+
+.reply-group{
+    overflow: hidden;
+}
+
+.reply-group .reply-input {
+    float: left;
+}
+
+.reply-group .right {
+    float: right;
+}
+
+.reply-group .reply-input input {
+    display: block;
+    width: 200px;
+    padding: 6px 12px;
+    margin: 0 0 5px;
+}
+.reply-group .reply-button {
+    float: right;
+}
+
+.reply-group {
+
+    overflow: hidden;
+}
+
+.reply-group small {
+    margin-left: 10px;
+}
+
+.reply-group .left {
+
+    float: left;
+}
+
+.reply-group .right {
+
+    float: right;
+}
+
+.reply-group .right .glyphicon-pencil {
+    float: right;
+    font-size: 14px;
+    color: #666565;
+}
+.reply-group .right .glyphicon-remove {
+    float: right;
+    font-size: 14px;
+    color: #666565;
+}
