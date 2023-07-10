@@ -19,7 +19,7 @@ const routes = [
         component: BoardList
     }, {
         //게시글 읽는 화면
-        path: '/boardDetail',
+        path: '/boardDetail/:board_num',
         name: 'boardDetail',
         component: BoardDetail
     }, {

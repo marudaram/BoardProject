@@ -1,8 +1,49 @@
 <script>
 import {defineComponent} from 'vue'
+import router from "@/router";
+import {createRouter as $router, useRoute} from "vue-router";
 
+const route = useRoute();
 export default defineComponent({
-  name: "BoardList"
+  name: "BoardList",
+
+  data() {
+    return {
+      BoardList: {
+        board_regDate: '',
+        board_hit: ''
+      }
+    }
+  },
+
+  methods: {
+    toBoardWrite() {
+      router.push({path:'/boardWrite'});
+    },
+    getBoardList() {
+      this.$axios.post('/board/list')
+          .then((res) => {
+            this.BoardList = res.data
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+    },
+
+    detail(idx) {
+      this.$router.push({
+        name: 'boardDetail',
+        params: {
+          board_num: idx
+        }
+      })
+    }
+  },
+
+  created() {
+    this.getBoardList();
+  }
+
 })
 </script>
 
@@ -11,7 +52,7 @@ export default defineComponent({
 
   <div class="wrapBox">
     <div class="firstBox">
-      <button class="writeBtn">글쓰기</button>
+      <button class="writeBtn" @click="toBoardWrite">글쓰기</button>
       <input type="text" placeholder="검색" class="search">
       <select>
         <option value="content">본문</option>
@@ -31,48 +72,14 @@ export default defineComponent({
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>ex1</td>
-        <td>ex2</td>
-        <td>ex3</td>
-        <td>ex4</td>
-        <td>ex5</td>
+      <tr v-for="(row, idx) in BoardList" :key=idx @click="detail(row.board_num)">
+        <td>{{idx + 1}}</td>
+        <td>{{row.board_title}}</td>
+        <td>{{row.user_id}}</td>
+        <td>{{BoardList.board_regDate}}</td>
+        <td>{{BoardList.board_hit}}</td>
       </tr>
-      <tr>
-        <td>ex1</td>
-        <td>ex2</td>
-        <td>ex3</td>
-        <td>ex4</td>
-        <td>ex5</td>
-      </tr>
-      <tr>
-        <td>ex1</td>
-        <td>ex2</td>
-        <td>ex3</td>
-        <td>ex4</td>
-        <td>ex5</td>
-      </tr>
-      <tr>
-        <td>ex1</td>
-        <td>ex2</td>
-        <td>ex3</td>
-        <td>ex4</td>
-        <td>ex5</td>
-      </tr>
-      <tr>
-        <td>ex1</td>
-        <td>ex2</td>
-        <td>ex3</td>
-        <td>ex4</td>
-        <td>ex5</td>
-      </tr>
-      <tr>
-        <td>ex1</td>
-        <td>ex2</td>
-        <td>ex3</td>
-        <td>ex4</td>
-        <td>ex5</td>
-      </tr>
+
       </tbody>
     </table>
 

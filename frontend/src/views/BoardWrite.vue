@@ -4,19 +4,54 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import { reactive } from '@vue/reactivity'
 import { useRouter } from 'vue-router';
-import axios from 'axios';
+import axios from "axios";
+
 export default {
   components : {
     ckeditor : CKEditor.component
   },
-  setup () {
-    const router = useRouter();
 
+  data() {
+    return {
+
+      boardDetail: {
+        board_title : '',
+        board_content : '',
+        user_id:'ffhfghf',
+      }
+
+    }
+  },
+
+  methods: {
+    onSubmit() {
+      let self = this;
+      this.$axios
+          .post('/board/save', {
+            board_title: this.boardDetail.board_title,
+            board_content: this.boardDetail.board_content,
+            user_id: this.boardDetail.user_id
+          })
+          .then((res) => {
+            if(res.status === 200) {
+              self.$router.push({path:'/boardList'})
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+            alert('에러발생' + error)
+          })
+    },
+
+    toBoardList() {
+      console.log('목록으로 이동');
+      this.$router.push({path:'/boardList'});
+    }
+  },
+
+  setup () {
 
     const state = reactive({
-      title : '',
-      content : '',
-      writer:'',
       editor : ClassicEditor,
     });
 
@@ -27,40 +62,9 @@ export default {
       });
     };
 
-    const onSubmit = async() => {
-      // 제목, 내용, 작성자 유효성 검사 자리 생략
-
-      if(state.title === ''){
-        alert('제목을 입력하세요.')
-        return false;
-      }
-      if(state.content === ''){
-        alert('내용을 입력하세요.')
-        return false;
-      }
-
-      const url = `/board101/insert.json`;
-      const headers = {"Content-Type" : "application/json"}
-      const body = {
-        title : state.title,
-        content : state.content,
-
-      }
-      const response = await axios.post(url, body, {headers:headers});
-      console.log(response.data);
-      if(response.data.status === 200){
-        router.push({path:'/boardList'});
-      }
-    };
-
-    const toBoardList = () => {
-      console.log('목록으로 이동');
-      router.push({path:'/boardList'});
-    }
 
 
-
-    return {state, handleEditorInit, onSubmit, toBoardList}
+    return {state, handleEditorInit}
   }
 }
 </script>
@@ -68,14 +72,15 @@ export default {
 <template>
   <div class="wrapBox">
     <div class="title">
-      <input type="text" placeholder="제목" class="titleBox">
+      <input type="text" placeholder="제목" class="titleBox" v-model="boardDetail.board_title">
     </div>
 
-    <el-form label-width="100px">
+    <div label-width="100px">
 
-      <el-form-item label="제목">
-        <el-input v-model="state.title" autofocus />
-      </el-form-item>
+<!--      <div label="제목">-->
+<!--        <input type="text" >-->
+
+<!--      </div>-->
 
       <div class="fileBox">
         <div>
@@ -94,17 +99,17 @@ export default {
         </div>
       </div>
 
-      <el-form-item label="내용" class="contentBox">
-        <ckeditor v-model="state.content"
+      <div label="내용" class="contentBox">
+        <ckeditor v-model="boardDetail.board_content"
                   :editor="state.editor" @ready="handleEditorInit"></ckeditor>
-      </el-form-item>
+      </div>
 
       <div class="btnBox">
         <button type="button" class="btn btn-primary" style="margin-right: 30px" @click="onSubmit" >등록</button>
         <button type="button" class="btn btn-outline-primary" @click="toBoardList" >목록</button>
       </div>
 
-    </el-form>
+    </div>
   </div>
 
 </template>

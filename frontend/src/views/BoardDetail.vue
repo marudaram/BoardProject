@@ -3,8 +3,43 @@ import {defineComponent} from 'vue'
 import '../assets/css/BoardDetail.css';
 
 
+
 export default defineComponent({
-  name: "BoardDetail"
+  name: "BoardDetail",
+
+  data() {
+    return {
+      boardDetail: {
+        board_num: '',
+        board_title: '',
+        board_content: '',
+        user_id: '',
+        board_regDate: '',
+        board_hit: ''
+    },
+      board_num: this.$route.params.board_num
+
+    }
+  },
+
+  beforeCreate() {
+    this.$axios.get('/board/read/', {params: {board_num: this.$route.params.board_num}})
+        .then((res) => {
+          this.boardDetail = res.data
+          console.log(res.data)
+        })
+        .catch((error) => console.log(error))
+  },
+
+  methods: {
+    getBoardDetail() {
+      this.$axios.get('/board/read', {params: {board_num: this.$route.params.board_num}})
+    },
+    toBoardList() {
+      console.log('목록으로 이동');
+      this.$router.push({path:'/boardList'});
+    }
+  }
 })
 </script>
 
@@ -13,20 +48,20 @@ export default defineComponent({
 
     <div class="contentBox">
       <div class="firstBox">
-        <h2 style="float: left">글 제목</h2>
+        <h2 style="float: left">{{boardDetail.board_title}}</h2>
         <button class="writeBtn">글쓰기</button>
       </div>
 
       <div class="secondBox">
         <div class="cell1">
-          <span class="titleMini">글 내용</span>
+          <span class="titleMini">{{boardDetail.board_content}}</span>
         </div>
 
         <div class="cell2">
           <div class="cell3">
-            <h5>작성자: 홍길동</h5>
-            <h5>등록 시간: 2023-07-07 07:07</h5>
-            <h5>조회수: 77</h5>
+            <h5>작성자: {{boardDetail.user_id}}</h5>
+            <h5>등록 시간: {{boardDetail.board_regDate}}</h5>
+            <h5>조회수: {{boardDetail.board_hit}}</h5>
           </div>
           <div class="cell4">
             글내용
@@ -46,7 +81,7 @@ export default defineComponent({
       </div>
 
       <div class="btnBox">
-        <button class="backToListBtn">목록</button>
+        <button class="backToListBtn" @click="toBoardList">목록</button>
         <button style="float: right">삭제</button>
         <button style="float: right; padding-right: 20px">수정</button>
       </div>
