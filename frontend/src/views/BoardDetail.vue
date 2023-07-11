@@ -3,41 +3,69 @@ import {defineComponent} from 'vue'
 import '../assets/css/BoardDetail.css';
 
 
-
 export default defineComponent({
-  name: "BoardDetail",
+  name: "detail",
 
   data() {
     return {
-      boardDetail: {
+      boardDetailData: {
         board_num: '',
         board_title: '',
         board_content: '',
         user_id: '',
         board_regDate: '',
         board_hit: ''
-    },
+      },
       board_num: this.$route.params.board_num
 
     }
   },
 
   beforeCreate() {
-    this.$axios.get('/board/read/', {params: {board_num: this.$route.params.board_num}})
+    console.log(this.$route.params.board_num);
+    const boardNum = this.$route.params.board_num;
+    // this.$axios.get('board/detail', {params: {board_num: this.$route.params.board_num}})
+    this.$axios.get(`board/detail/${boardNum}`)
         .then((res) => {
-          this.boardDetail = res.data
-          console.log(res.data)
+          const { status, data } = res;
+          if(status !== 200) alert("에러가 발생했습니다.")
+          this.boardDetailData = data
         })
-        .catch((error) => console.log(error))
+        .catch((error) => alert(error))
   },
 
   methods: {
-    getBoardDetail() {
-      this.$axios.get('/board/read', {params: {board_num: this.$route.params.board_num}})
-    },
+    // getBoardDetail() {
+    //   this.$axios.get('board/detail?board_num=' + this.$route.params.board_num)
+    //       .then((res) => {
+    //         this.boardDetailData = res.data
+    //         console.log(res.data)
+    //       })
+    //       .catch((error) => console.log(error))
+    // },
     toBoardList() {
       console.log('목록으로 이동');
-      this.$router.push({path:'/boardList'});
+      this.$router.push({path: '/list'});
+    },
+    boardDelete() {
+      if (confirm("삭제하시겠습니까?")) {
+        this.$axios.delete('board/detail', {params: {board_num: this.$route.params.board_num}})
+            .then((res) => {
+              this.$router.push('/list')
+              console.log(res)
+            })
+            .catch((error) => alert(error))
+      }
+
+    },
+    changeBoard() {
+      this.$router.push({
+        name: 'modify',
+        params: ({
+          board_num: this.$route.params.board_num
+        })
+      })
+
     }
   }
 })
@@ -48,42 +76,39 @@ export default defineComponent({
 
     <div class="contentBox">
       <div class="firstBox">
-        <h2 style="float: left">{{boardDetail.board_title}}</h2>
+        <h2 style="float: left">{{ boardDetailData.board_title }}</h2>
         <button class="writeBtn">글쓰기</button>
       </div>
 
       <div class="secondBox">
         <div class="cell1">
-          <span class="titleMini">{{boardDetail.board_content}}</span>
+          <span class="titleMini">글내용</span>
         </div>
 
         <div class="cell2">
           <div class="cell3">
-            <h5>작성자: {{boardDetail.user_id}}</h5>
-            <h5>등록 시간: {{boardDetail.board_regDate}}</h5>
-            <h5>조회수: {{boardDetail.board_hit}}</h5>
+            <h5>작성자: {{ boardDetailData.user_id }}</h5>
+            <h5>등록 시간: {{ boardDetailData.board_regDate }}</h5>
+            <h5>조회수: {{ boardDetailData.board_hit }}</h5>
           </div>
-          <div class="cell4">
-            글내용
-
-
+          <div class="cell4" v-html="boardDetailData.board_content">
           </div>
         </div>
       </div>
 
       <div class="thirdBox">
-          <div class="cell5">
+        <div class="cell5">
           <span class="fileTitle">첨부파일</span>
-          </div>
-          <div class="cell6">
-              파일
-          </div>
+        </div>
+        <div class="cell6">
+          파일
+        </div>
       </div>
 
       <div class="btnBox">
         <button class="backToListBtn" @click="toBoardList">목록</button>
-        <button style="float: right">삭제</button>
-        <button style="float: right; padding-right: 20px">수정</button>
+        <button style="float: right" @click="boardDelete">삭제</button>
+        <button style="float: right; padding-right: 20px" @click="changeBoard">수정</button>
       </div>
     </div>
 
@@ -137,14 +162,11 @@ export default defineComponent({
     </section>
 
 
-
-
   </div>
 
 </template>
 
 <style scoped>
-
 
 
 </style>

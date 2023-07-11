@@ -7,13 +7,9 @@ module.exports = defineConfig({
   outputDir: "../src/main/resources/static", //빌드 타겟 디렉토리
   // npm run serve 개발 진행시에 포트가 다르기때문에 프록시 설정
   devServer: {
-    proxy: {
-      '/board' : {
-        target: 'http://localhost:8081',
-        changeOrigin: true
-      }
-    }
-  }
+    proxy: 'http://localhost:8081'
+    },
+
 
 });
 

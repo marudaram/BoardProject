@@ -1,29 +1,36 @@
 <script>
 import {defineComponent} from 'vue'
-import router from "@/router";
-import {createRouter as $router, useRoute} from "vue-router";
 
-const route = useRoute();
+
 export default defineComponent({
-  name: "BoardList",
 
   data() {
     return {
-      BoardList: {
+      listData: {
         board_regDate: '',
         board_hit: ''
       }
     }
   },
 
+  beforeCreate() {
+
+  },
+
+  mounted() {
+    console.log("BoardList.Vue 생성됨");
+    this.getBoardList();
+  },
+
   methods: {
     toBoardWrite() {
-      router.push({path:'/boardWrite'});
+      this.$router.push({path:'/write'});
     },
     getBoardList() {
-      this.$axios.post('/board/list')
+      console.log("created: getBoardList")
+      this.$axios.get('/board/list')
           .then((res) => {
-            this.BoardList = res.data
+            this.listData = res.data
           })
           .catch((error) => {
             console.log(error)
@@ -31,17 +38,19 @@ export default defineComponent({
     },
 
     detail(idx) {
+      console.log(idx);
+
       this.$router.push({
-        name: 'boardDetail',
-        params: {
+        name: 'detail',
+        params: ({
           board_num: idx
-        }
+        })
       })
     }
   },
 
   created() {
-    this.getBoardList();
+
   }
 
 })
@@ -54,7 +63,7 @@ export default defineComponent({
     <div class="firstBox">
       <button class="writeBtn" @click="toBoardWrite">글쓰기</button>
       <input type="text" placeholder="검색" class="search">
-      <select>
+      <select class="optionBox">
         <option value="content">본문</option>
         <option value="title">제목</option>
         <option value="writer">작성자</option>
@@ -72,12 +81,12 @@ export default defineComponent({
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(row, idx) in BoardList" :key=idx @click="detail(row.board_num)">
+      <tr v-for="(row, idx) in listData" :key=idx @click="detail(row.board_num)">
         <td>{{idx + 1}}</td>
         <td>{{row.board_title}}</td>
         <td>{{row.user_id}}</td>
-        <td>{{BoardList.board_regDate}}</td>
-        <td>{{BoardList.board_hit}}</td>
+        <td>{{row.board_regDate}}</td>
+        <td>{{row.board_hit}}</td>
       </tr>
 
       </tbody>
@@ -86,10 +95,9 @@ export default defineComponent({
 
 
     <div class="thirdBox">
-      <select>
-        <option value="content">본문</option>
-        <option value="title">제목</option>
-        <option value="writer">작성자</option>
+      <select class="optionBox2">
+        <option value="content">최신글</option>
+        <option value="title">조회수</option>
       </select>
     </div>
   </div>
@@ -121,15 +129,30 @@ th ,td {
   text-align: right;
   padding-top: 80px;
   padding-bottom: 20px;
+  position: relative;
 }
 
 .firstBox .writeBtn {
-  margin-right: 20px;
+  position: absolute;
+  top: 80%;
+  left: 70%;
 }
 
 .firstBox .search {
+  border: 3px solid lightblue;
   margin-right: 20px;
+  position: absolute;
+  top: 70%;
+  left: 75%;
+}
 
+.firstBox .optionBox {
+  border: 3px solid lightblue;
+  text-align: center;
+  width: 80px;
+  position: absolute;
+  top: 70%;
+  left: 92%;
 }
 
 #listBox {
@@ -143,6 +166,15 @@ th ,td {
 .thirdBox {
   text-align: right;
   padding-top: 20px;
+  position: relative;
+}
+
+.thirdBox .optionBox2 {
+  border: 3px solid skyblue;
+  text-align: center;
+  width: 80px;
+  position: absolute;
+  left: 91%;
 }
 
 </style>

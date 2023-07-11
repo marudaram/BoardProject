@@ -28,7 +28,6 @@ public class BoardSaveDto {
 
     public Board toEntity() {
         return Board.builder()
-                .board_num(board_num)
                 .user_id(user_id)
                 .board_title(board_title)
                 .board_content(board_content)

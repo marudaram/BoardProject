@@ -14,7 +14,7 @@ export default {
   data() {
     return {
 
-      boardDetail: {
+      boardDetailData: {
         board_title : '',
         board_content : '',
         user_id:'ffhfghf',
@@ -28,13 +28,13 @@ export default {
       let self = this;
       this.$axios
           .post('/board/save', {
-            board_title: this.boardDetail.board_title,
-            board_content: this.boardDetail.board_content,
-            user_id: this.boardDetail.user_id
+            board_title: this.boardDetailData.board_title,
+            board_content: this.boardDetailData.board_content,
+            user_id: this.boardDetailData.user_id
           })
           .then((res) => {
             if(res.status === 200) {
-              self.$router.push({path:'/boardList'})
+              self.$router.push({path:'/list'})
             }
           })
           .catch((error) => {
@@ -45,7 +45,7 @@ export default {
 
     toBoardList() {
       console.log('목록으로 이동');
-      this.$router.push({path:'/boardList'});
+      this.$router.push({path:'/list'});
     }
   },
 
@@ -72,7 +72,7 @@ export default {
 <template>
   <div class="wrapBox">
     <div class="title">
-      <input type="text" placeholder="제목" class="titleBox" v-model="boardDetail.board_title">
+      <input type="text" placeholder="제목" class="titleBox" v-model="boardDetailData.board_title">
     </div>
 
     <div label-width="100px">
@@ -100,7 +100,7 @@ export default {
       </div>
 
       <div label="내용" class="contentBox">
-        <ckeditor v-model="boardDetail.board_content"
+        <ckeditor v-model="boardDetailData.board_content"
                   :editor="state.editor" @ready="handleEditorInit"></ckeditor>
       </div>
 
