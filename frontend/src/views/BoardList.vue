@@ -7,30 +7,80 @@ export default defineComponent({
   data() {
     return {
       listData: {
-        board_regDate: '',
-        board_hit: ''
-      }
+        title: '',
+        content: '',
+        regDate: '',
+        hit: ''
+      },
+
+      //페이지 이동에 필요한 초기값
+      page: 1,
+      amount: 10,
+      totalElements: 0,
+      totalPages: 0
+    }
+  },
+
+  computed: {
+    showPrev() {
+      return this.page > 1;
+    },
+    param() {
+      return this.$route.params.criteriaObj;
+    }
+  },
+
+  watch: {
+    param(criteriaObj) {
+      const {page, amount} = JSON.parse(criteriaObj)
+      this.page = page;
+      this.amount = amount;
+      this.getBoardList();
     }
   },
 
   beforeCreate() {
+  },
 
+
+  created() {
   },
 
   mounted() {
-    console.log("BoardList.Vue 생성됨");
+    if (this.$route.name == "listParam") {
+      const param = this.$route.params.criteriaObj;
+      const {page, amount} = JSON.parse(param)
+      this.page = page;
+      this.amount = amount;
+    }
     this.getBoardList();
   },
 
   methods: {
     toBoardWrite() {
-      this.$router.push({path:'/write'});
+      this.$router.push({path: '/write'});
     },
-    getBoardList() {
-      console.log("created: getBoardList")
-      this.$axios.get('/board/list')
+    async getBoardList() {
+
+      await this.$axios.get('/board/list', {
+        params: {
+          page: this.page > 0 ? this.page - 1 : this.page,
+          amount: this.amount,
+        }
+      })
           .then((res) => {
-            this.listData = res.data
+
+            const {status, data} = res;
+
+            // TODO status 코드로 에러 처리
+
+            const {content: list, number: page, totalElements, size: amount, totalPages} = data;
+            this.listData = list;
+            this.page = page + 1;
+            this.amount = amount;
+            this.totalElements = totalElements;
+            this.totalPages = totalPages;
+
           })
           .catch((error) => {
             console.log(error)
@@ -38,20 +88,24 @@ export default defineComponent({
     },
 
     detail(idx) {
-      console.log(idx);
-
       this.$router.push({
         name: 'detail',
         params: ({
-          board_num: idx
+          id: idx
         })
       })
+    },
+    // 페이지 이동
+    routePage({page = 1, amount = this.amount}) {
+      this.$router.push({
+        name: 'listParam',
+        params: ({
+          criteriaObj: JSON.stringify({page, amount})
+        })
+      });
     }
   },
 
-  created() {
-
-  }
 
 })
 </script>
@@ -81,17 +135,16 @@ export default defineComponent({
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(row, idx) in listData" :key=idx @click="detail(row.board_num)">
-        <td>{{idx + 1}}</td>
-        <td>{{row.board_title}}</td>
-        <td>{{row.user_id}}</td>
-        <td>{{row.board_regDate}}</td>
-        <td>{{row.board_hit}}</td>
+      <tr v-for="(row, idx) in listData" :key=idx @click="detail(row.id)">
+        <td>{{ idx + 1 }}</td>
+        <td>{{ row.title }}</td>
+        <td>{{ row.writer }}</td>
+        <td>{{ row.regDate }}</td>
+        <td>{{ row.hit }}</td>
       </tr>
 
       </tbody>
     </table>
-
 
 
     <div class="thirdBox">
@@ -100,6 +153,29 @@ export default defineComponent({
         <option value="title">조회수</option>
       </select>
     </div>
+
+
+    <!--페이지네이션 부분-->
+    <div class="paginationWrap">
+      <ul class="pagination">
+        <li class="page-item"><a class="page-link" @click="routePage({page : 1})" style="margin-right: 10px">First</a>
+        </li>
+        <li class="page-item"><a class="page-link" v-if="showPrev" @click="routePage({page : page-1})"
+                                 style="margin-right: 10px"
+                                 aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <template v-for="index in totalPages">
+          <li class="page-item" :class="index == this.page?'active':''"><span class="page-link important"
+                                                                              @click.prevent="routePage({page : index}), getBoardList()"
+                                                                              id="index">{{ index }}</span></li>
+        </template>
+        <li class="page-item"><a class="page-link" @click="routePage({page : page+1})" style="margin-right: 10px"
+                                 aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+        <li class="page-item"><a class="page-link" @click="routePage({page : this.totalPages})" style="margin-right: 10px">Last</a>
+        </li>
+      </ul>
+    </div>
+
+
   </div>
 </template>
 
@@ -108,15 +184,16 @@ export default defineComponent({
 table {
   border-collapse: collapse;
 }
-th ,td {
+
+th, td {
   width: 100px;
   height: 50px;
   text-align: center;
   border: 1px solid #000;
 
-  vertical-align: top;	/* 위 */
-  vertical-align: bottom;   /* 아래 */
-  vertical-align: middle;   /* 가운데 */
+  vertical-align: top; /* 위 */
+  vertical-align: bottom; /* 아래 */
+  vertical-align: middle; /* 가운데 */
 }
 
 .wrapBox {
@@ -176,5 +253,49 @@ th ,td {
   position: absolute;
   left: 91%;
 }
+
+/* 페이지네이션 부분 */
+
+
+.paginationWrap .page-link {
+  background-color: white;
+}
+
+.paginationWrap li.active span {
+  background-color: #202632;
+  border: none;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.page-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.page-link {
+  color: #333;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.page-link:hover {
+  color: #0064ff;
+}
+
+.active .page-link {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
 
 </style>

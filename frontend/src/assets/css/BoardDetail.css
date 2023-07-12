@@ -29,7 +29,6 @@
 }
 
 .secondBox .contentTitle {
-    border: 1px solid pink;
     width: 20%;
     height: 500px;
 }
@@ -73,7 +72,6 @@
 }
 
 .cell4 {
-    border: 1px solid pink;
     width: 530px;
     position: absolute;
     top: 30%;

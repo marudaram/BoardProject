@@ -17,10 +17,18 @@ const routes = [
         //게시판 리스트 화면
         path: '/list',
         name: 'list',
-        component: BoardList
+        component: BoardList,
+        children: [
+            {
+            //게시판 리스트 화면
+            path: '/list/:criteriaObj',
+            name: 'listParam',
+            component: BoardList,
+            }
+        ]
     }, {
         //게시글 읽는 화면
-        path: '/detail/:board_num',
+        path: '/detail/:id',
         name: 'detail',
         component: BoardDetail
     }, {
@@ -30,7 +38,7 @@ const routes = [
         component: BoardWrite
     }, {
         //게시글 수정 화면
-        path: '/modify/:board_num',
+        path: '/modify/:id',
         name: 'modify',
         component: BoardModify
     }, {

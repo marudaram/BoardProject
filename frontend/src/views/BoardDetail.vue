@@ -9,21 +9,20 @@ export default defineComponent({
   data() {
     return {
       boardDetailData: {
-        board_num: '',
-        board_title: '',
-        board_content: '',
-        user_id: '',
-        board_regDate: '',
-        board_hit: ''
+        id: '',
+        title: '',
+        content: '',
+        writer: '',
+        regDate: '',
+        hit: ''
       },
-      board_num: this.$route.params.board_num
 
     }
   },
 
   beforeCreate() {
-    console.log(this.$route.params.board_num);
-    const boardNum = this.$route.params.board_num;
+    console.log(this.$route.params.id);
+    const boardNum = this.$route.params.id;
     // this.$axios.get('board/detail', {params: {board_num: this.$route.params.board_num}})
     this.$axios.get(`board/detail/${boardNum}`)
         .then((res) => {
@@ -49,7 +48,7 @@ export default defineComponent({
     },
     boardDelete() {
       if (confirm("삭제하시겠습니까?")) {
-        this.$axios.delete('board/detail', {params: {board_num: this.$route.params.board_num}})
+        this.$axios.delete('board/detail', {params: {id: this.$route.params.id}})
             .then((res) => {
               this.$router.push('/list')
               console.log(res)
@@ -62,7 +61,7 @@ export default defineComponent({
       this.$router.push({
         name: 'modify',
         params: ({
-          board_num: this.$route.params.board_num
+          id: this.$route.params.id
         })
       })
 
@@ -76,7 +75,7 @@ export default defineComponent({
 
     <div class="contentBox">
       <div class="firstBox">
-        <h2 style="float: left">{{ boardDetailData.board_title }}</h2>
+        <h2 style="float: left">{{ boardDetailData.title }}</h2>
         <button class="writeBtn">글쓰기</button>
       </div>
 
@@ -87,11 +86,11 @@ export default defineComponent({
 
         <div class="cell2">
           <div class="cell3">
-            <h5>작성자: {{ boardDetailData.user_id }}</h5>
-            <h5>등록 시간: {{ boardDetailData.board_regDate }}</h5>
-            <h5>조회수: {{ boardDetailData.board_hit }}</h5>
+            <h5>작성자: {{ boardDetailData.writer }}</h5>
+            <h5>등록 시간: {{ boardDetailData.regDate }}</h5>
+            <h5>조회수: {{ boardDetailData.hit }}</h5>
           </div>
-          <div class="cell4" v-html="boardDetailData.board_content">
+          <div class="cell4" v-html="boardDetailData.content">
           </div>
         </div>
       </div>

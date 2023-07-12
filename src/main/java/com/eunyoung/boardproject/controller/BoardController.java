@@ -2,12 +2,14 @@ package com.eunyoung.boardproject.controller;
 
 import com.eunyoung.boardproject.dto.BoardResponseDto;
 import com.eunyoung.boardproject.dto.BoardSaveDto;
+import com.eunyoung.boardproject.pagination.Criteria;
+import com.eunyoung.boardproject.pagination.PageGate;
+import com.eunyoung.boardproject.pagination.PageVO;
 import com.eunyoung.boardproject.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -23,18 +25,18 @@ public class BoardController {
     //게시글 저장
     @PostMapping("/save")
     public BoardResponseDto save(@RequestBody BoardSaveDto boardSaveDto) {
-        boardSaveDto.setBoard_regDate(new Date());
+        boardSaveDto.setRegDate(new Date());
         return boardService.save(boardSaveDto);
     }
 
 
     //게시판 리스트
     @GetMapping("/list")
-    public List<BoardSaveDto> list(Model model) {
-        List<BoardSaveDto> boardSaveDtoList = boardService.getBoardList();
-        return boardSaveDtoList;
+    public Page<BoardResponseDto> list(Criteria cri) {
+        //총 개수
+        Page<BoardResponseDto> boardList = boardService.getBoardList(cri);
+        return boardList;
     }
-
 
     //게시판 디테일
     @GetMapping(value = "/detail/{boardNum}")
@@ -53,8 +55,7 @@ public class BoardController {
     @PutMapping("/detail/{boardNum}")
     public ResponseEntity<BoardResponseDto> modi(@PathVariable("boardNum") Integer board_num,
                                                  @RequestBody BoardSaveDto boardSaveDto) {
-        boardSaveDto.setBoard_num(board_num);
-        boardSaveDto.setBoard_regDate(new Date());
+        boardSaveDto.setId(board_num);
         return new ResponseEntity<>(boardService.modi(boardSaveDto), HttpStatus.OK);
     }
 

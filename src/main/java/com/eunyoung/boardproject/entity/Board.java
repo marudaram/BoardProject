@@ -1,7 +1,6 @@
 package com.eunyoung.boardproject.entity;
 
 import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -16,26 +15,37 @@ public class Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int board_num; // pk -> auto_increment
+    private int id; // pk -> auto_increment
 
     @Column(length = 30, nullable = false)
-    private String user_id;
+    private String writer;
 
     @Column(length = 210)
-    private String board_title;
+    private String title;
 
-    @Column(columnDefinition = "TEXT") //type을 text로 바꿔준다
-    private String board_content;
+    @Lob
+//    @Column(columnDefinition = "TEXT") //type을 text로 바꿔준다
+    private String content;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date board_regDate;
+    private Date regDate;
 
-    @Column
-    private Integer board_hit;
+    private Integer hit;
 
+    /**
+     * 게시글 내용 변경
+     *
+     * @param title   -- 변경할 제목
+     * @param content -- 변경할 내용
+     */
     public void changeBoard(String title, String content) {
-        this.board_title = title;
-        this.board_content = content;
+        this.title = title;
+        this.content = content;
+        this.regDate = new Date();
+    }
+
+    public int increaseHit() {
+        return this.hit++;
     }
 
 }

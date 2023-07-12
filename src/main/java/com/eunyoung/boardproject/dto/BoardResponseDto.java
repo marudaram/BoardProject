@@ -1,6 +1,5 @@
 package com.eunyoung.boardproject.dto;
 
-import com.eunyoung.boardproject.entity.Board;
 import lombok.*;
 
 import java.util.Date;
@@ -11,10 +10,10 @@ import java.util.Date;
 @Getter
 @Setter
 public class BoardResponseDto {
-    private Integer board_num;
-    private String user_id;
-    private String board_title;
-    private String board_content;
-    private Date board_regDate;
-    private Integer board_hit;
+    private Integer id;
+    private String writer;
+    private String title;
+    private String content;
+    private Date regDate;
+    private Integer hit;
 }

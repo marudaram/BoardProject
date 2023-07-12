@@ -14,20 +14,20 @@ export default {
   data() {
     return {
       boardChangeData: {
-        board_num: '',
-        board_title: '',
-        board_content: '',
-        user_id: '',
-        board_regDate: '',
-        board_hit: ''
+        id: '',
+        title: '',
+        content: '',
+        writer: '',
+        regDate: '',
+        hit: ''
       }
     }
 
   },
 
   created() {
-    const board_num = this.$route.params.board_num;
-    this.$axios.get(`board/detail/${board_num}` )
+    const id = this.$route.params.id;
+    this.$axios.get(`board/detail/${id}`)
         .then((res) => {
           this.boardChangeData = res.data
           console.log(res.data)
@@ -36,11 +36,22 @@ export default {
 
   methods: {
     boardModi() {
-      this.$axios.put(`board/detail/${this.boardChangeData.board_num}`, this.boardChangeData)
+      this.$axios.put(`board/detail/${this.boardChangeData.id}`, {
+            title: this.boardChangeData.title,
+            content: this.boardChangeData.content,
+            writer: this.boardChangeData.writer,
+          }
+      )
           .then((res) => {
             this.boardChangeData = res.data
             console.log(res.data)
-
+            this.$router.push({
+              name: `detail`,
+              params: {
+                id: this.$route.params.id
+              }
+            })
+            this.$router.push(`/detail/${this.$route.params.id}`)
           })
     },
 
@@ -52,7 +63,6 @@ export default {
   },
 
   setup() {
-    const router = useRouter();
 
 
     const state = reactive({
@@ -78,7 +88,7 @@ export default {
 <template>
   <div class="wrapBox">
     <div class="title">
-      <input type="text" placeholder="제목" class="titleBox" v-model="boardChangeData.board_title">
+      <input type="text" placeholder="제목" class="titleBox" v-model="boardChangeData.title">
     </div>
 
     <div label-width="100px">
@@ -99,9 +109,9 @@ export default {
           </form>
         </div>
       </div>
-
+<!--      ckeditor-->
       <div label="내용" class="contentBox">
-        <ckeditor v-model="boardChangeData.board_content"
+        <ckeditor v-model="boardChangeData.content"
                   :editor="state.editor" @ready="handleEditorInit"></ckeditor>
       </div>
 
