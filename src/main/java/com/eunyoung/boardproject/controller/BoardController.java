@@ -59,4 +59,8 @@ public class BoardController {
         return new ResponseEntity<>(boardService.modi(boardSaveDto), HttpStatus.OK);
     }
 
+    //조회수 증가
+
+//    public int
+
 }

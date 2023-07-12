@@ -12,7 +12,7 @@ export default defineComponent({
         id: '',
         title: '',
         content: '',
-        writer: '',
+        writer: JSON.parse(sessionStorage.getItem('sessionId')),
         regDate: '',
         hit: ''
       },

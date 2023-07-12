@@ -2,6 +2,8 @@
 import {defineComponent} from 'vue'
 import '../assets/css/SignIn.css';
 
+import { mapMutations } from "vuex";
+
 export default defineComponent({
   name: "Signin",
 
@@ -22,8 +24,9 @@ export default defineComponent({
       })
           .then((res) => {
             //sessionStorage에 id 추가
-            sessionStorage.setItem(`sessionId`, JSON.stringify(res.data.id))
+            sessionStorage.setItem(`sessionId`, JSON.stringify(this.userInfo.id))
             this.$store.commit(`setId`, sessionStorage.getItem(`sessionId`));
+            this.$router.push(`/list`)
           })
           .catch((error) => console.log(error))
           .finally(() => console.log('로그인 시도'))

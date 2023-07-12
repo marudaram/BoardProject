@@ -30,7 +30,7 @@ public class UserService {
         }
 
         // 비밀번호 비교
-        if (findUser.get().getPassword().equals(userDto.getPassword())) {
+        if (!findUser.get().getPassword().equals(userDto.getPassword())) {
             return false;
         }
 

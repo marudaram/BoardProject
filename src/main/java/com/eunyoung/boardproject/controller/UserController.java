@@ -28,10 +28,12 @@ public class UserController {
     @PostMapping("/signIn")
     public String signIn(@RequestBody UserDto userDto) {
 
+//        String checkId = userDto.getId();
+//        String checkPw = userDto.getPassword();
         if (userService.signIn(userDto)) {
             return "Success";
         }
-        return "signIn";
+        return "hmmm";
 
 
     }

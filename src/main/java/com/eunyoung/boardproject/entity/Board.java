@@ -30,6 +30,7 @@ public class Board {
     @Temporal(TemporalType.TIMESTAMP)
     private Date regDate;
 
+    @Column(columnDefinition = "int default 0")
     private Integer hit;
 
     /**
