@@ -1,6 +1,5 @@
 package com.eunyoung.boardproject.dto;
 
-import com.eunyoung.boardproject.entity.Board;
 import lombok.*;
 
 import java.util.Date;
@@ -10,7 +9,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-public class BoardSaveDto {
+public class BoardRequestDto {
     private Integer id;
     private String writer;
     private String title;

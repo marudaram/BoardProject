@@ -1,6 +1,7 @@
 <script>
 import {defineComponent} from 'vue'
 import '../assets/css/BoardDetail.css';
+import {id} from "vuetify/locale";
 
 
 export default defineComponent({

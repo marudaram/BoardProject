@@ -2,7 +2,22 @@
 import {defineComponent} from 'vue'
 
 export default defineComponent({
-  name: "Header"
+  name: "Header",
+
+
+  methods: {
+    clickLogo() {
+      this.$router.push({path: '/list'});
+    },
+    goToList() {
+      this.$router.push({path: '/list'});
+    },
+    goToMyList() {
+      this.$router.push({path: `/myBoard/${JSON.parse(sessionStorage.getItem('sessionId'))}`})
+    }
+  }
+
+
 })
 </script>
 
@@ -11,13 +26,13 @@ export default defineComponent({
   <header id="header">
     <nav class="wrap">
       <div class="colorHeader">
-        <span class="headerTitle">Maver</span>
+        <span class="headerTitle" @click="clickLogo">Maver</span>
       </div>
       <div class="anotherColorHeader">
         <ul class="headerBox">
           <li class="board">로그아웃</li>
-          <li class="myBoard">게시글</li>
-          <li class="logOut">내 게시글</li>
+          <li class="myBoard" @click="goToList">게시글</li>
+          <li class="logOut" @click="goToMyList">내 게시글</li>
         </ul>
       </div>
     </nav>

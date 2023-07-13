@@ -1,18 +1,16 @@
 package com.eunyoung.boardproject.service;
 
 import com.eunyoung.boardproject.dto.BoardResponseDto;
-import com.eunyoung.boardproject.dto.BoardSaveDto;
+import com.eunyoung.boardproject.dto.BoardRequestDto;
 import com.eunyoung.boardproject.entity.Board;
 import com.eunyoung.boardproject.pagination.Criteria;
 import com.eunyoung.boardproject.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.mapper.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,37 +22,71 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public BoardResponseDto save(BoardSaveDto boardSaveDto) {
-        Board board = boardRepository.save(toEntity(boardSaveDto));
+    public BoardResponseDto save(BoardRequestDto boardRequestDto) {
+        Board board = boardRepository.save(toEntity(boardRequestDto));
         return toDto(board);
     }
 
     @Transactional
     public Page<BoardResponseDto> getBoardList(Criteria cri) {
 
-        PageRequest pageRequest = PageRequest.of(cri.getPage(), cri.getAmount());
+        PageRequest pageRequest = PageRequest.of(cri.getPage(),cri.getAmount(), Sort.by("id").descending() );
         Page<Board> boardPage = boardRepository.findAll(pageRequest);
         List<BoardResponseDto> dtoList = boardPage.stream().map(this::toDto).collect(Collectors.toList());
 
         return new PageImpl<>(dtoList, boardPage.getPageable(), boardPage.getTotalElements());
     }
 
-    public BoardResponseDto read(Integer board_num) {
-        Board board = boardRepository.findById(board_num).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. board_num=" + board_num));
-        board.increaseHit();
+//    //내가 쓴 게시글만 가져오기
+//    @Transactional
+//    public Page<BoardResponseDto> getMyBoardList(Criteria cri, String writer) {
+//        PageRequest pageRequest = PageRequest.of(cri.getPage(), cri.getAmount(), Sort.by("id").descending());
+////        Page<Board> boardPage = boardRepository.findByWriter(writer, pageRequest);
+//        Page<Board> boardPage = boardRepository.myBoardCollection(writer, pageRequest);
+//
+//        List<BoardResponseDto> dtoList = boardPage.stream().map(this::toDto).collect(Collectors.toList());
+//
+//        return new PageImpl<>(dtoList, boardPage.getPageable(), boardPage.getTotalElements());
+//    }
+
+    //내가 쓴 게시글 가져오기(페이지네이션 X)
+    @Transactional
+    public List<BoardResponseDto> getMyBoardList(String writer) {
+        List<Board> myBoardList = boardRepository.findByWriter(writer);
+        List<BoardResponseDto> boardResponseDtoList = new ArrayList<>();
+        for(Board board : myBoardList) {
+            BoardResponseDto boardResponseDto = BoardResponseDto.builder()
+                    .id(board.getId())
+                    .writer(board.getWriter())
+                    .title(board.getTitle())
+                    .content(board.getContent())
+                    .regDate(board.getRegDate())
+                    .hit(board.getHit())
+                    .build();
+
+            boardResponseDtoList.add(boardResponseDto);
+        }
+        return boardResponseDtoList;
+    }
+
+
+    @Transactional
+    public BoardResponseDto read(Integer id) {
+        Board board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+//        board.increaseHit();
         return toDto(board);
     }
 
     @Transactional
-    public void deletePost(Integer board_num) {
-        boardRepository.deleteById(board_num);
+    public void deletePost(Integer id) {
+        boardRepository.deleteById(id);
     }
 
     @Transactional
-    public BoardResponseDto modi(BoardSaveDto boardSaveDto) {
-        Board board = boardRepository.findById(boardSaveDto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. board_num=" + boardSaveDto.getId()));
-        board.changeBoard(boardSaveDto.getTitle(), boardSaveDto.getContent());
+    public BoardResponseDto modi(BoardRequestDto boardRequestDto) { //검증 필요 ***
+        Board board = boardRepository.findById(boardRequestDto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + boardRequestDto.getId()));
+        board.changeBoard(boardRequestDto.getTitle(), boardRequestDto.getContent());
         return toDto(board);
     }
 
@@ -69,7 +101,7 @@ public class BoardService {
                 .build();
     }
 
-    private Board toEntity(BoardSaveDto dto) {
+    private Board toEntity(BoardRequestDto dto) {
         return Board.builder()
                 .writer(dto.getWriter())
                 .title(dto.getTitle())
@@ -85,6 +117,13 @@ public class BoardService {
 //        int total = boardSaveDto.getBoard_num();
 
         return boardRepository.count();
+    }
+
+    //조회수 증가
+    @Modifying
+    @Transactional
+    public void increaseHit(Integer id) {
+        boardRepository.increaseHit(id);
     }
 
 }

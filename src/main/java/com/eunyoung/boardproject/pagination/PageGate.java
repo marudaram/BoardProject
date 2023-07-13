@@ -1,10 +1,8 @@
 package com.eunyoung.boardproject.pagination;
 
 import com.eunyoung.boardproject.dto.BoardResponseDto;
-import com.eunyoung.boardproject.dto.BoardSaveDto;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data

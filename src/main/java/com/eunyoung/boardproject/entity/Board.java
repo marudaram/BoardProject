@@ -1,6 +1,7 @@
 package com.eunyoung.boardproject.entity;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,12 +11,13 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Entity
+@DynamicInsert
 @Table(name = "board")
 public class Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id; // pk -> auto_increment
+    private Integer id; // pk -> auto_increment
 
     @Column(length = 30, nullable = false)
     private String writer;
@@ -45,8 +47,8 @@ public class Board {
         this.regDate = new Date();
     }
 
-    public int increaseHit() {
-        return this.hit++;
-    }
+//    public int increaseHit() {
+//        return this.hit++;
+//    }
 
 }

@@ -20,10 +20,10 @@ const routes = [
         component: BoardList,
         children: [
             {
-            //게시판 리스트 화면
-            path: '/list/:criteriaObj',
-            name: 'listParam',
-            component: BoardList,
+                //게시판 리스트 화면
+                path: '/list/:criteriaObj',
+                name: 'listParam',
+                component: BoardList,
             }
         ]
     }, {
@@ -43,9 +43,10 @@ const routes = [
         component: BoardModify
     }, {
         //내가 쓴 게시글 화면
-        path: '/myBoard',
+        path: '/myBoard/:writer',
         name: 'myBoard',
-        component: MyBoard
+        component: MyBoard,
+
     },
     {
         // 테스트
